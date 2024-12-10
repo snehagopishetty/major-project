@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Chatbot</title>
+    <link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Mental Health Chatbot</h1>
+        <div id="chat-window">
+            <div id="messages"></div>
+            <input type="text" id="user-input" placeholder="Type your message here..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    <script>
+        const sendBtn = document.getElementById('send-btn');
+        const userInput = document.getElementById('user-input');
+        const messages = document.getElementById('messages');
+
+        sendBtn.addEventListener('click', () => {
+            const message = userInput.value;
+            if (!message) return;
+
+            // Display user message
+            const userMessage = document.createElement('div');
+            userMessage.textContent = `You: ${message}`;
+            messages.appendChild(userMessage);
+
+            // Clear input
+            userInput.value = '';
+
+            // Send message to backend
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Display chatbot response
+                    const botMessage = document.createElement('div');
+                    botMessage.textContent = `Bot: ${data.response}`;
+                    messages.appendChild(botMessage);
+                })
+                .catch(err => console.error('Error:', err));
+        });
+    </script>
+</body>
+</html>
