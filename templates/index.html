@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mental Health Chatbot</title>
     <link rel="stylesheet" href="/static/styles.css">
-
 </head>
 <body>
     <div class="container">
@@ -16,6 +15,18 @@
             <button id="send-btn">Send</button>
         </div>
     </div>
+
+    <h1>Relax with a Calm Image</h1>
+    <button id="loadImage">Get Calm Image</button>
+    <div id="imageContainer">
+        <img id="calmImage" src="" alt="Calm Image" style="max-width: 100%; display: none;">
+    </div>
+
+    <!-- Random Audio Player Section -->
+    <h1>Relax with Soothing Music</h1>
+    <button id="playButton">Play Random Audio</button>
+    <audio id="audioPlayer" controls></audio>
+
     <script>
         const sendBtn = document.getElementById('send-btn');
         const userInput = document.getElementById('user-input');
@@ -48,6 +59,44 @@
                 })
                 .catch(err => console.error('Error:', err));
         });
+
+        // Load calming image functionality
+        document.getElementById('loadImage').addEventListener('click', () => {
+            fetch('/get_calm_image')
+                .then(response => response.json())
+                .then(data => {
+                    const img = document.getElementById('calmImage');
+                    img.src = data.image_url;
+                    img.style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching image:', error));
+        });
+
+        // Array containing the paths of the audio files
+        const audioFiles = [
+            '/static/audios/1.mp3',
+            '/static/audios/2.mp3',
+            '/static/audios/3.mp3',
+            '/static/audios/4.mp3',
+            '/static/audios/5.mp3',
+            '/static/audios/6.mp3',
+            '/static/audios/7.mp3',
+            '/static/audios/8.mp3',
+            '/static/audios/9.mp3',
+            '/static/audios/10.mp3'
+            
+        ];
+
+        // Function to play a random audio file
+        function playRandomAudio() {
+            const randomIndex = Math.floor(Math.random() * audioFiles.length);
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.src = audioFiles[randomIndex];  // Set the source to the random audio file
+            audioPlayer.play();  // Play the audio
+        }
+
+        // Event listener for the button
+        document.getElementById('playButton').addEventListener('click', playRandomAudio);
     </script>
 </body>
 </html>

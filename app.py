@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from cohere_api import get_chat_response
+from calm_image import get_calm_image
 
 app = Flask(__name__)
 
@@ -15,6 +16,11 @@ def chat():
 
     response = get_chat_response(user_input)
     return jsonify({'response': response})
+
+@app.route('/get_calm_image', methods=['GET'])
+def get_image():
+    image_url = get_calm_image()
+    return jsonify({"image_url": image_url})
 
 if __name__ == '__main__':
     app.run(debug=True)
