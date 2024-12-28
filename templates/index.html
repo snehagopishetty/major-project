@@ -9,6 +9,31 @@
 <body>
     <div class="container">
         <h1>Mental Health Chatbot</h1>
+
+        <!-- User Preferences Section -->
+        <div id="preferences-section">
+            <h2>Set Your Preferences</h2>
+            <label for="mood">Select Your Mood:</label>
+            <select id="mood">
+                <option value="happy">Happy</option>
+                <option value="sad">Sad</option>
+                <option value="anxious">Anxious</option>
+                <option value="angry">Angry</option>
+                <option value="neutral">Neutral</option>
+            </select>
+
+            <label for="tone">Select Chatbot Tone:</label>
+            <select id="tone">
+                <option value="empathetic">Empathetic</option>
+                <option value="motivational">Motivational</option>
+                <option value="friendly">Friendly</option>
+                <option value="professional">Professional</option>
+            </select>
+
+            <button id="save-preferences">Save Preferences</button>
+        </div>
+
+        <!-- Chat Window -->
         <div id="chat-window">
             <div id="messages"></div>
             <input type="text" id="user-input" placeholder="Type your message here..." />
@@ -32,6 +57,26 @@
         const userInput = document.getElementById('user-input');
         const messages = document.getElementById('messages');
 
+        // Save preferences button event listener
+        const savePreferencesBtn = document.getElementById('save-preferences');
+        savePreferencesBtn.addEventListener('click', () => {
+            const mood = document.getElementById('mood').value;
+            const tone = document.getElementById('tone').value;
+
+            // Send preferences to backend
+            fetch('/update_preferences', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: 'user123', mood, tone })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(err => console.error('Error saving preferences:', err));
+        });
+
+        // Chat functionality
         sendBtn.addEventListener('click', () => {
             const message = userInput.value;
             if (!message) return;
@@ -84,7 +129,6 @@
             '/static/audios/8.mp3',
             '/static/audios/9.mp3',
             '/static/audios/10.mp3'
-            
         ];
 
         // Function to play a random audio file

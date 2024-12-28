@@ -2,14 +2,28 @@ import cohere
 
 COHERE_API_KEY = 'hWd5UdhlLc34aba1lHLu4xYB1K8iRTxAvU0Wz3Hn'
 
+# Initialize Cohere client
+co = cohere.Client(COHERE_API_KEY)
+
+# Function to get a standard chatbot response
 def get_chat_response(user_input):
-    co = cohere.Client(COHERE_API_KEY)
     response = co.chat(
-       # model='command-xlarge-2023',
         message=f"User: {user_input}\nChatbot:",
-        #max_tokens=50,
         temperature=0.7,
-        stop_sequences=["User:"])
-    #return response.generations[0].text.strip()
+        stop_sequences=["User:"]
+    )
     return response.text
-    
+
+# Function to get a personalized chatbot response
+def get_personalized_response(user_input, mood, tone):
+    prompt = (
+        f"The user is feeling {mood}. Respond in a {tone} tone.\n"
+        f"User: {user_input}\n"
+        f"Chatbot:"
+    )
+    response = co.chat(
+        message=prompt,
+        temperature=0.7,
+        stop_sequences=["User:"]
+    )
+    return response.text
