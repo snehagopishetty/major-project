@@ -15,13 +15,14 @@ kw_extractor = yake.KeywordExtractor()
 lemmatizer = WordNetLemmatizer()
 
 # Function to get a standard chatbot response
-def get_chat_response(user_input):
-    response = co.chat(
-        message=f"User: {user_input}\nChatbot:",
-        temperature=0.7,
-        stop_sequences=["User:"]
-    )
-    return response.text
+# def get_chat_response(user_input):
+#     response = co.chat(
+#         message=f"User: {user_input}\nChatbot:",
+#         temperature=0.7,
+#         stop_sequences=["User:"]
+#     )
+#     context_str += response.text
+#     return response.text
 
 def get_synonyms(word):
     synonyms = set()
@@ -34,13 +35,26 @@ def get_synonyms(word):
 def get_personalized_response(user_input, mood, tone):
     # Extract keywords from user input using YAKE
     keywords = kw_extractor.extract_keywords(user_input)
-    
+    print("hello")
+    print(keywords)
+
+    #context handling
+    filename = "context.txt"
+    f = open(filename, "r")
+    context_str = f.read()
+    f.close()
+
     # Get the keyword with the highest priority (lowest score)
-    main_keyword = min(keywords, key=lambda x: x[0])[0]  # Extract the keyword with the lowest score
+    if len(keywords) > 0 :
+        main_keyword = min(keywords, key=lambda x: x[0])[0]  # Extract the keyword with the lowest score
+    else:
+        main_keyword  = ""
     # Ensure that main_keyword is a string before using split
     if isinstance(main_keyword, str):
         prompt = (
+                f"You are a mental health chatbot and a mental health expert.dont mention your version or model anywhere while replying\n"
                 f"The user is feeling {mood}. Respond in a {tone} tone.\n"
+                f"respond while keeping in mind the previous inputs by user: {context_str}\n"
                 f"User: {user_input}\n"
                 f"Chatbot:"
             )
@@ -49,6 +63,11 @@ def get_personalized_response(user_input, mood, tone):
             temperature=0.7,
             stop_sequences=["User:"]
         )
+
+        file1 = open(filename, "a")  # append mode
+        file1.write(user_input+"\n")
+        file1.close()
+
         final_response = response.text
         # Define emotional keywords related to unwellness and emotional states
         emotional_keywords = ['stress', 'anxiety', 'depression', 'unwell', 'overwhelmed', 'sad', 'nervous', 'fear'  ]
@@ -81,8 +100,18 @@ def get_personalized_response(user_input, mood, tone):
         return final_response
         
             
-    else:
-        # If main_keyword is not a string, just proceed with a regular response
-        return get_chat_response(user_input)
-
+    # else:
+    #     # If main_keyword is not a string, just proceed with a regular response
+    #     prompt = (
+    #             f"The user is feeling {mood}. Respond in a {tone} tone.\n"
+    #             f"User: {user_input}\n"
+    #             f"respond while keeping in mind the previous inputs by user: {context_str}"
+    #     )
+    #     response = co.chat(
+    #             message=prompt,
+    #             temperature=0.7,
+    #             stop_sequences=["User:"]
+    #     )
+    #     context_str += response.text
+    #     return response.text
 

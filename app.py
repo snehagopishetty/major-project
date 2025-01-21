@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
-from cohere_api import get_chat_response, get_personalized_response
+from cohere_api import get_personalized_response
 from calm_image import get_calm_image
+from os import remove
 
 app = Flask(__name__)
 
@@ -9,6 +10,15 @@ user_preferences = {}
 
 @app.route('/')
 def index():
+    filename = "context.txt"
+    try:
+        with open(filename, "x") as f:
+            f.write("")
+    except FileExistsError:
+        remove(filename)
+        with open(filename, "x") as f:
+            f.write("")
+    f.close()
     return render_template('index.html')
 
 @app.route('/chat', methods=['POST'])
@@ -16,7 +26,7 @@ def chat():
     data = request.json
     user_input = data.get('message', '')
     user_id = data.get('user_id')
-
+    
     if not user_input:
         return jsonify({'error': 'No input provided!'}), 400
 
