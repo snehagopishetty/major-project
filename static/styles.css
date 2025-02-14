@@ -1,147 +1,170 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background-color: lightgoldenrodyellow;
     margin: 0;
     padding: 20px;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 650px;
     margin: 0 auto;
     padding: 20px;
-    background: white;
+    background: lightblue;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
-h1, h2 {
+h1 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 800;
+    font-variant: initial;
+    font-size: 1500;
     text-align: center;
-    color: #333;
+    color: blueviolet;
 }
 
-#preferences-section {
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #f1f1f1;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#preferences-section label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #555;
-}
-
-#preferences-section select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-#save-preferences {
-    padding: 10px 20px;
-    background-color: #17a2b8;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: block;
-    margin: 0 auto;
-}
-
-#save-preferences:hover {
-    background-color: #138496;
-}
-
+/* Chat Window */
 #chat-window {
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    border: 1px solid #ddd;
+    background-color: lightpink;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#messages {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
 }
 
-#messages {
-    height: 300px;
-    overflow-y: auto;
+/* Chat Bubbles */
+.message {
+    max-width: 75%;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 15px;
+    font-size: 14px;
+    word-wrap: break-word;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* User Messages (Right Aligned - Green) */
+.user-message {
+    background-color: olivedrab;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+    text-align: left;
+}
+
+/* Bot Messages (Left Aligned - White) */
+.bot-message {
+    background-color: yellow;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
     border: 1px solid #ddd;
+}
+
+/* Timestamp */
+.timestamp {
+    font-size: 10px;
+    color:black;
+    text-align: right;
+    margin-top: 3px;
+}
+
+/* Input Container */
+#input-container {
+    display: flex;
     padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    background-color: #fefefe;
+    background: red;
+    border-top: 1px solid #ddd;
 }
 
 #user-input {
-    flex: 1;
+    flex-grow: 1;
     padding: 10px;
-    font-size: 16px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
 #send-btn {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
+    margin-left: 1px;
+    padding: 10px 15px;
+    background-color: #25d366;
     border: none;
-    border-radius: 4px;
+    color: white;
+    border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
 }
 
 #send-btn:hover {
-    background-color: #0056b3;
+    background-color: #1da851;
 }
 
-#loadImage {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#loadImage:hover {
-    background-color: #218838;
-}
-
-#imageContainer {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#calmImage {
-    max-width: 100%;
+/* Preferences Section */
+#preferences-section {
+    background: rgb(88, 88, 132);
+    padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: none; /* Initially hidden */
+    text-align: center;
+    margin-bottom: 20px;
+    max-width: 650px;
+    margin: 0 auto;
 }
 
-#playButton {
-    padding: 10px 20px;
-    background-color: #ffc107;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+/* Flex container for mood and tone */
+.preferences-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+/* Individual preference boxes */
+.preference-box {
+    flex: 1;
+    min-width: 200px;
+    margin: 5px;
+    text-align: left;
+}
+
+/* Label styling */
+.preference-box label {
+    font-weight: bold;
     display: block;
-    margin: 20px auto;
+    margin-bottom: 5px;
 }
 
-#playButton:hover {
-    background-color: #e0a800;
-}
-
-audio {
-    display: block;
-    margin: 20px auto;
+/* Dropdown styling */
+.preference-box select {
     width: 100%;
-    max-width: 600px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Save button styling */
+#save-preferences {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: darkblue;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#save-preferences:hover {
+    background-color: skyblue;
 }

@@ -56,55 +56,62 @@
         const sendBtn = document.getElementById('send-btn');
         const userInput = document.getElementById('user-input');
         const messages = document.getElementById('messages');
-
-        // Save preferences button event listener
-        const savePreferencesBtn = document.getElementById('save-preferences');
-        savePreferencesBtn.addEventListener('click', () => {
-            const mood = document.getElementById('mood').value;
-            const tone = document.getElementById('tone').value;
-
-            // Send preferences to backend
-            fetch('/update_preferences', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: 'user123', mood, tone })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                })
-                .catch(err => console.error('Error saving preferences:', err));
-        });
-
-        // Chat functionality
+    
         sendBtn.addEventListener('click', () => {
-            const message = userInput.value;
+            const message = userInput.value.trim();
             if (!message) return;
-
+    
             // Display user message
             const userMessage = document.createElement('div');
-            userMessage.textContent = `You: ${message}`;
+            userMessage.classList.add('message', 'user-message');
+            userMessage.innerHTML = `You: ${message} <div class="timestamp">${new Date().toLocaleTimeString()}</div>`;
             messages.appendChild(userMessage);
-
-            // Clear input
+    
+            // Scroll to bottom
+            messages.scrollTop = messages.scrollHeight;
+    
+            // Clear input field
             userInput.value = '';
-
+    
             // Send message to backend
             fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message })
             })
-                .then(response => response.json())
-                .then(data => {
-                    // Display chatbot response
-                    const botMessage = document.createElement('div');
-                    botMessage.textContent = `Bot: ${data.response}`;
-                    messages.appendChild(botMessage);
-                })
-                .catch(err => console.error('Error:', err));
+            .then(response => response.json())
+            .then(data => {
+                // Display bot response
+                const botMessage = document.createElement('div');
+                botMessage.classList.add('message', 'bot-message');
+                botMessage.innerHTML = `Bot: ${data.response} <div class="timestamp">${new Date().toLocaleTimeString()}</div>`;
+                messages.appendChild(botMessage);
+    
+                // Scroll to bottom
+                messages.scrollTop = messages.scrollHeight;
+            })
+            .catch(err => console.error('Error:', err));
         });
-
+    
+        // Save preferences button event listener
+        const savePreferencesBtn = document.getElementById('save-preferences');
+        savePreferencesBtn.addEventListener('click', () => {
+            const mood = document.getElementById('mood').value;
+            const tone = document.getElementById('tone').value;
+    
+            // Send preferences to backend
+            fetch('/update_preferences', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: 'user123', mood, tone })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(err => console.error('Error saving preferences:', err));
+        });
+    
         // Load calming image functionality
         document.getElementById('loadImage').addEventListener('click', () => {
             fetch('/get_calm_image')
@@ -116,7 +123,7 @@
                 })
                 .catch(error => console.error('Error fetching image:', error));
         });
-
+    
         // Array containing the paths of the audio files
         const audioFiles = [
             '/static/audios/1.mp3',
@@ -130,7 +137,7 @@
             '/static/audios/9.mp3',
             '/static/audios/10.mp3'
         ];
-
+    
         // Function to play a random audio file
         function playRandomAudio() {
             const randomIndex = Math.floor(Math.random() * audioFiles.length);
@@ -138,9 +145,9 @@
             audioPlayer.src = audioFiles[randomIndex];  // Set the source to the random audio file
             audioPlayer.play();  // Play the audio
         }
-
+    
         // Event listener for the button
         document.getElementById('playButton').addEventListener('click', playRandomAudio);
-    </script>
+    </script> 
 </body>
 </html>
