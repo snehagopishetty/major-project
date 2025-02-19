@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from cohere_api import get_personalized_response
 from calm_image import get_calm_image
 from os import remove
+import json  # Import JSON module
 
 app = Flask(__name__)
 
@@ -18,7 +19,6 @@ def index():
         remove(filename)
         with open(filename, "x") as f:
             f.write("")
-    f.close()
     return render_template('index.html')
 
 @app.route('/chat', methods=['POST'])
@@ -37,7 +37,13 @@ def chat():
 
     # Get personalized chatbot response
     response = get_personalized_response(user_input, mood, tone)
-    return jsonify({'response': response})
+
+    # Use json.dumps() to ensure newline characters are preserved
+    return app.response_class(
+        response=json.dumps({'response': response}, ensure_ascii=False, indent=2),
+        status=200,
+        mimetype='application/json'
+    )
 
 @app.route('/update_preferences', methods=['POST'])
 def update_preferences():

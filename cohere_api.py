@@ -3,7 +3,10 @@ import yake
 from nltk.corpus import wordnet as wn
 from nltk.stem import WordNetLemmatizer
 
+
 COHERE_API_KEY = 'hWd5UdhlLc34aba1lHLu4xYB1K8iRTxAvU0Wz3Hn'
+
+
 
 # Initialize Cohere client
 co = cohere.Client(COHERE_API_KEY)
@@ -35,7 +38,7 @@ def get_synonyms(word):
 def get_personalized_response(user_input, mood, tone):
     # Extract keywords from user input using YAKE
     keywords = kw_extractor.extract_keywords(user_input)
-    print("hello")
+    print("keywords:")
     print(keywords)
 
     #context handling
@@ -55,10 +58,12 @@ def get_personalized_response(user_input, mood, tone):
                 f"You are a mental health chatbot and a mental health expert.dont mention your version or model anywhere while replying\n"
                 f"The user is feeling {mood}. Respond in a {tone} tone.\n"
                 f"respond while keeping in mind the previous inputs by user: {context_str}\n"
+                f"respond only in english unless user asks you to respond in a certain language.\n"
+                f"respond with suitable punctuations and paragraph split.\n"
                 f"User: {user_input}\n"
                 f"Chatbot:"
             )
-        response = co.chat(
+        response =  co.chat(
             message=prompt,
             temperature=0.7,
             stop_sequences=["User:"]
@@ -74,44 +79,27 @@ def get_personalized_response(user_input, mood, tone):
 
         # Lemmatize the main keyword
         lemmatized_keyword = lemmatizer.lemmatize(main_keyword.lower())
-
         # Get synonyms of the lemmatized keyword
         synonyms = get_synonyms(lemmatized_keyword)
+
         # Check if the keyword is related to emotional states or well-being
-        if any(keyword.lower() in emotional_keywords for keyword in synonyms):
+        if lemmatized_keyword in emotional_keywords or set(synonyms).intersection(set(emotional_keywords)):
             # Generate a motivational story using the main keyword
             prompt = (
                 f"The user is feeling {mood}. Respond in a {tone} tone.\n"
                 f"User: {user_input}\n"
                 f"Chatbot: Let me share a short story about {main_keyword} to help you feel better...\n"
-                f"Story about {main_keyword}: "
+                f"Story about {main_keyword}: \n"
+                f"respond with suitable punctuations and paragraph split."
             )
 
             # Send the prompt to Cohere to generate the story
-            response = co.chat(
+            response =  co.chat(
                 message=prompt,
                 temperature=0.7,
                 stop_sequences=["User:"]
             )
-
-            final_response = final_response + "\n\n" + response.text
-
-        
-        return final_response
-        
             
-    # else:
-    #     # If main_keyword is not a string, just proceed with a regular response
-    #     prompt = (
-    #             f"The user is feeling {mood}. Respond in a {tone} tone.\n"
-    #             f"User: {user_input}\n"
-    #             f"respond while keeping in mind the previous inputs by user: {context_str}"
-    #     )
-    #     response = co.chat(
-    #             message=prompt,
-    #             temperature=0.7,
-    #             stop_sequences=["User:"]
-    #     )
-    #     context_str += response.text
-    #     return response.text
-
+            final_response = final_response + "\n\n" + response.text
+            
+        return final_response

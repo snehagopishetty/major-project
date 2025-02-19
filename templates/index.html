@@ -7,9 +7,22 @@
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+    <div class="navbar">
+        <a href="#home">Home</a>
+        <a href="#chat">Chat</a>
+        <a href="#images">Images</a>
+        <a href="#music">Music</a>
+    </div>
+    <section id="home">
+        <div class="home-content">
+            <h1>Welcome to Our Mental Health Chatbot</h1>
+            <p>Mental health is just as important as physical health. Stress, anxiety, and emotional struggles can impact our daily lives. Our chatbot provides support, guidance, and resources to help you navigate your challenges and find peace of mind.</p>
+            <p>With AI-powered assistance, you can express your thoughts, get relaxation tips, and receive mental wellness guidance anytime, anywhere.</p>
+        </div>
+    </section>
+    <section id = "chat">
     <div class="container">
         <h1>Mental Health Chatbot</h1>
-
         <!-- User Preferences Section -->
         <div id="preferences-section">
             <h2>Set Your Preferences</h2>
@@ -40,18 +53,24 @@
             <button id="send-btn">Send</button>
         </div>
     </div>
-
+</section>
+<section id="images">
     <h1>Relax with a Calm Image</h1>
-    <button id="loadImage">Get Calm Image</button>
+    
     <div id="imageContainer">
+        <button id="loadImage">Get Calm Image</button>
         <img id="calmImage" src="" alt="Calm Image" style="max-width: 100%; display: none;">
     </div>
+</section>
 
+<section id="music">
     <!-- Random Audio Player Section -->
     <h1>Relax with Soothing Music</h1>
-    <button id="playButton">Play Random Audio</button>
-    <audio id="audioPlayer" controls></audio>
-
+    <div id="audioContainer">
+        <button id="playButton">Play Random Audio</button>
+        <audio id="audioPlayer" controls></audio>
+    </div>
+</section>
     <script>
         const sendBtn = document.getElementById('send-btn');
         const userInput = document.getElementById('user-input');
@@ -81,15 +100,20 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Display bot response
+                // Display bot response while preserving spaces and new lines
                 const botMessage = document.createElement('div');
                 botMessage.classList.add('message', 'bot-message');
-                botMessage.innerHTML = `Bot: ${data.response} <div class="timestamp">${new Date().toLocaleTimeString()}</div>`;
+            
+                // Convert newlines in response to <br> tags
+                botMessage.innerHTML = `Bot: ${data.response.replace(/\n/g, '<br>')} 
+                    <div class="timestamp">${new Date().toLocaleTimeString()}</div>`;
+            
                 messages.appendChild(botMessage);
-    
+            
                 // Scroll to bottom
                 messages.scrollTop = messages.scrollHeight;
             })
+            
             .catch(err => console.error('Error:', err));
         });
     
